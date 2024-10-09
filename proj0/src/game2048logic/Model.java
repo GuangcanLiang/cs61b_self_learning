@@ -85,6 +85,14 @@ public class Model {
      * */
     public boolean emptySpaceExists() {
         // TODO: Task 2. Fill in this function.
+        for (int i = 0 ; i < size() ; i++){
+            for (int j = 0; j <size() ; j++){
+                Tile t = tile(i, j);
+                if (t == null){
+                    return  true;
+                }
+            }
+        }
         return false;
     }
 
@@ -95,6 +103,18 @@ public class Model {
      */
     public boolean maxTileExists() {
         // TODO: Task 3. Fill in this function.
+        for (int i = 0 ; i < size() ; i++){
+            for (int j = 0; j <size() ; j++){
+                Tile t = tile(i, j);
+                if (t == null){
+                    continue;
+                }
+                int theValue = t.value();
+                if (theValue == MAX_PIECE){
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
