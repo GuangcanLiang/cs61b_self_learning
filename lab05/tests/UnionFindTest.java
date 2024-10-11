@@ -80,6 +80,40 @@ public class UnionFindTest {
         }
     }
 
+    @Test
+    public void sizetest() {
+        UnionFind uf = new UnionFind(5);
+        uf.union(1, 3);
+        assertThat(uf.sizeOf(1)).isEqualTo(2);
+
+
+    }
+
+    @Test
+    public void sametest() {
+        UnionFind uf = new UnionFind(4);
+        uf.union(3, 3);
+        uf.union(2, 3);
+        assertThat(uf.find(3)).isEqualTo(3);
+    }
+
+    @Test
+    public void optimize() {
+        UnionFind uf = new UnionFind(10);
+        uf.union(1, 9);
+        uf.union(4, 3);
+        uf.union(5, 7);
+        uf.union(6, 8);
+        uf.union(9, 4);
+        uf.union(7, 6);
+        uf.union(3, 5);
+        assertThat(uf.parent(1)).isEqualTo(9);
+        assertThat(uf.find(1)).isEqualTo(8);
+        assertThat(uf.parent(1)).isEqualTo(8);
+        assertThat(uf.parent(9)).isEqualTo(8);
+    }
+
+
     /**
      * Write your own tests below here to verify for correctness. The given tests are not comprehensive.
      * Specifically, you may want to write a test for path compression and to check for the correctness
