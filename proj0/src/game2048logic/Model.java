@@ -126,7 +126,31 @@ public class Model {
      */
     public boolean atLeastOneMoveExists() {
         // TODO: Fill in this function.
+        if (this.emptySpaceExists()) {
+            return true;
+        }
+        //横向检查
+        for (int i = 0; i < size() - 1; i++){
+            for (int j = 0; j < size(); j++){
+                Tile t0 = tile(i, j);
+                Tile t1 = tile(i + 1, j);
+                if (t0.value() == t1.value()) {
+                    return true;
+                }
+            }
+        }
+        //纵向检查
+        for (int i = 0; i < size(); i++) {
+            for (int j = 0; j < size() - 1; j++) {
+                Tile t0 = tile(i, j);
+                Tile t1 = tile(i, j + 1);
+                if (t0.value() == t1.value()) {
+                    return  true;
+                }
+            }
+        }
         return false;
+
     }
 
     /**
@@ -144,11 +168,25 @@ public class Model {
      *    and the trailing tile does not.
      */
     public void moveTileUpAsFarAsPossible(int x, int y) {
+        // TODO: Tasks 5, 6, and 10. Fill in this function.
         Tile currTile = board.tile(x, y);
         int myValue = currTile.value();
         int targetY = y;
+        int step = 0;
+        for (int i = targetY + 1; i < size(); i++) {
+            Tile checktile = tile(x, i);
+            if (checktile == null || (checktile.value() == currTile.value() && ! checktile.wasMerged())) {
+                step++;
+            }
+        }
+        if (step == 0) {
+            return;
+        }//对于不用移动的step == 0, 不能直接用move, 不然会自己跟自己merge
+        board.move(x, targetY + step, currTile);
+        if (tile(x, targetY + step).wasMerged()) {
+            score = score + 2 * myValue;
+        }
 
-        // TODO: Tasks 5, 6, and 10. Fill in this function.
     }
 
     /** Handles the movements of the tilt in column x of the board
@@ -158,10 +196,29 @@ public class Model {
      * */
     public void tiltColumn(int x) {
         // TODO: Task 7. Fill in this function.
+        //for(int i = size() - 1 ; i == 0; i = i - 1) {
+        //    this.moveTileUpAsFarAsPossible(x, i);
+        //}
+
+        int RawWeProcess = size() - 1;
+        while (RawWeProcess >= 0){
+            if (tile(x, RawWeProcess) == null) {
+                RawWeProcess = RawWeProcess - 1;
+                continue;
+            }
+            this.moveTileUpAsFarAsPossible(x, RawWeProcess);
+            RawWeProcess = RawWeProcess - 1;
+        }
+
     }
 
     public void tilt(Side side) {
         // TODO: Tasks 8 and 9. Fill in this function.
+        board.setViewingPerspective(side);
+        for (int i = 0; i < size(); i++) {
+            this.tiltColumn(i);
+        }
+        board.setViewingPerspective(Side.NORTH);
     }
 
     /** Tilts every column of the board toward SIDE.

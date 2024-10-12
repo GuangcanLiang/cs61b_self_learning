@@ -119,4 +119,32 @@ public class TestMoveTileUp {
         assertWithMessage("Boards should match:").that(before.toString()).isEqualTo(after.toString());
     }
 
+
+
+
+    @Test
+    @Tag("moveTileUpAsFarAsPossible")
+    @DisplayName("two tiles, different values2")
+    @GradedTest(number = "10.2")
+    public void testTwoTiles2() {
+        int[][] board = {
+                {0, 0, 4, 0},
+                {0, 0, 0, 2},
+                {0, 0, 0, 0},
+                {0, 0, 0, 0}
+        };
+        Model before = new Model(board, 0);
+        before.moveTileUpAsFarAsPossible(3, 2);
+
+        int[][] result = {
+                {0, 0, 4, 2},
+                {0, 0, 0, 0},
+                {0, 0, 0, 0},
+                {0, 0, 0, 0}
+        };
+
+        Model after = new Model(result, 0);
+        assertWithMessage("Boards should match:").that(before.toString()).isEqualTo(after.toString());
+    }
+
 }
