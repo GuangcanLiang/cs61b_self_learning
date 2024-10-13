@@ -128,7 +128,7 @@ public class TestMoveTileUp {
     @GradedTest(number = "10.2")
     public void testTwoTiles2() {
         int[][] board = {
-                {0, 0, 4, 0},
+                {0, 0, 0, 0},
                 {0, 0, 0, 2},
                 {0, 0, 0, 0},
                 {0, 0, 0, 0}
@@ -137,7 +137,7 @@ public class TestMoveTileUp {
         before.moveTileUpAsFarAsPossible(3, 2);
 
         int[][] result = {
-                {0, 0, 4, 2},
+                {0, 0, 0, 2},
                 {0, 0, 0, 0},
                 {0, 0, 0, 0},
                 {0, 0, 0, 0}

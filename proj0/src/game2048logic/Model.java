@@ -169,11 +169,13 @@ public class Model {
      */
     public void moveTileUpAsFarAsPossible(int x, int y) {
         // TODO: Tasks 5, 6, and 10. Fill in this function.
+        /*
         Tile currTile = board.tile(x, y);
         int myValue = currTile.value();
         int targetY = y;
         int step = 0;
-        for (int i = targetY + 1; i < size(); i++) {
+
+        for (int i = targetY + 1; i < size() ; i++) {
             Tile checktile = tile(x, i);
             if (checktile == null || (checktile.value() == currTile.value() && ! checktile.wasMerged())) {
                 step++;
@@ -185,7 +187,69 @@ public class Model {
         board.move(x, targetY + step, currTile);
         if (tile(x, targetY + step).wasMerged()) {
             score = score + 2 * myValue;
+        }*/
+
+        /*
+        if (targetY == size() - 1){
+            step = 0;
         }
+        else {
+            while (tile(x, targetY + step + 1) == null) {
+                step++;
+                if (targetY + step + 1 == size() - 1){
+                    break;
+                }
+            }
+            if ((targetY + step + 1 < size()) && (tile(x, targetY + step + 1) != null) && (tile(x, targetY + step + 1).value() == currTile.value()) && !tile(x, targetY + step + 1).wasMerged()) {
+                step++;
+            }
+        }
+
+        if (step == 0) {
+            return;
+        }//对于不用移动的step == 0, 不能直接用move, 不然会自己跟自己merge
+        board.move(x, targetY + step, currTile);
+        if (tile(x, targetY + step).wasMerged()) {
+            score = score + 2 * myValue;
+        }*/
+
+        Tile currTile = board.tile(x, y);
+        int myValue = currTile.value();
+        int targetY = y;
+        int Preceding = 0;
+
+        for (int i = size() - 1; tile(x, i) != null && i > targetY; i--) {
+                Preceding++;
+        }
+
+        if (targetY == size() - 1) {
+            return;
+        }//在顶上
+
+        if ((Preceding == size() - targetY - 1) && (tile(x, size() - Preceding).value() != myValue)) {
+            return;
+        }//前面都塞满了(而且还是不能merge的）
+
+        if (Preceding == 0) {
+            board.move(x, size() - 1, currTile);
+            return;
+        }//前面没有东西，开到顶上
+
+        Tile WouldMergeTile = tile(x, size() - Preceding);
+        if ((WouldMergeTile.value() == currTile.value()) && ! WouldMergeTile.wasMerged()) {
+            board.move(x, size() - Preceding, currTile);
+            score = score + 2 * myValue;
+        }
+        else {
+            board.move(x, size() - Preceding - 1, currTile);
+        }
+
+
+
+
+
+
+
 
     }
 
