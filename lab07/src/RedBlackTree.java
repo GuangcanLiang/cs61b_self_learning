@@ -51,6 +51,11 @@ public class RedBlackTree<T extends Comparable<T>> {
      */
     void flipColors(RBTreeNode<T> node) {
         // TODO: YOUR CODE HERE
+        boolean temp = node.isBlack;
+        node.isBlack = node.left.isBlack;
+        node.left.isBlack = temp;
+        node.right.isBlack = temp;
+        //交换该节点与子节点的颜色，在假设左右两边都有子树且颜色相同(事实上只有这种情况翻滚才有意义)
     }
 
     /**
@@ -62,6 +67,13 @@ public class RedBlackTree<T extends Comparable<T>> {
      */
     RBTreeNode<T> rotateRight(RBTreeNode<T> node) {
         // TODO: YOUR CODE HERE
+        RBTreeNode<T> temp = node;//记录下待处理节点
+        temp.left = temp.left.right;//待处理的左指向原左的右
+        node = node.left;//改变，用待处理的左去覆盖
+        node.right = temp;//覆盖后的右指向前面的处理过的记录节点
+        //上面完成了旋转操作，还有颜色未改
+        node.isBlack = false;
+        temp.isBlack = true;
         return null;
     }
 
@@ -74,6 +86,13 @@ public class RedBlackTree<T extends Comparable<T>> {
      */
     RBTreeNode<T> rotateLeft(RBTreeNode<T> node) {
         // TODO: YOUR CODE HERE
+        RBTreeNode<T> temp = node;//记录下待处理节点
+        temp.right = temp.right.left;//待处理的右指向原右边的左
+        node = node.right;//改变，用待处理的you去覆盖
+        node.left = temp;//覆盖后的右指向前面的处理过的记录节点
+        //上面完成了旋转操作，还有颜色未改
+        node.isBlack = false;
+        temp.isBlack = true;
         return null;
     }
 
