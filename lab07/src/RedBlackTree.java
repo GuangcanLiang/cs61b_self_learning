@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class RedBlackTree<T extends Comparable<T>> {
 
     /* Root of the tree. */
@@ -67,14 +70,14 @@ public class RedBlackTree<T extends Comparable<T>> {
      */
     RBTreeNode<T> rotateRight(RBTreeNode<T> node) {
         // TODO: YOUR CODE HERE
-        RBTreeNode<T> temp = node;//记录下待处理节点
-        temp.left = temp.left.right;//待处理的左指向原左的右
+        RBTreeNode<T> temp = new RBTreeNode<>(node.isBlack, node.item, node.left, node.right);//原本是直接 = node(坏了，这里直接把node给改了);//记录下待处理节点
+        temp.left = temp.left.right;//待处理的左指向原左的右，(坏了，这里直接把node给改了)
         node = node.left;//改变，用待处理的左去覆盖
         node.right = temp;//覆盖后的右指向前面的处理过的记录节点
         //上面完成了旋转操作，还有颜色未改
         node.isBlack = false;
         temp.isBlack = true;
-        return null;
+        return node;
     }
 
     /**
@@ -86,14 +89,14 @@ public class RedBlackTree<T extends Comparable<T>> {
      */
     RBTreeNode<T> rotateLeft(RBTreeNode<T> node) {
         // TODO: YOUR CODE HERE
-        RBTreeNode<T> temp = node;//记录下待处理节点
+        RBTreeNode<T> temp = new RBTreeNode<>(node.isBlack, node.item, node.left, node.right);//记录下待处理节点
         temp.right = temp.right.left;//待处理的右指向原右边的左
         node = node.right;//改变，用待处理的you去覆盖
         node.left = temp;//覆盖后的右指向前面的处理过的记录节点
         //上面完成了旋转操作，还有颜色未改
         node.isBlack = false;
         temp.isBlack = true;
-        return null;
+        return node;
     }
 
     /**
@@ -133,6 +136,7 @@ public class RedBlackTree<T extends Comparable<T>> {
         // TODO: Rotate right operation
 
         // TODO: Color flip
+
 
         return null; //fix this return statement
     }
