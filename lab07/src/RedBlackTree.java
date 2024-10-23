@@ -136,9 +136,9 @@ public class RedBlackTree<T extends Comparable<T>> {
      */
     private RBTreeNode<T> insert(RBTreeNode<T> node, T item) {
         // TODO: Insert (return) new red leaf node.
-        RBTreeNode<T> hadInseretedNode;//最后return这个出去
+
         if (node == null) {
-            hadInseretedNode =  new RBTreeNode(false, item);
+            node =  new RBTreeNode(false, item);
         }
 
         // TODO: Handle normal binary search tree insertion.
@@ -151,35 +151,28 @@ public class RedBlackTree<T extends Comparable<T>> {
             }
         }*/
         else {
-
-            hadInseretedNode = new RBTreeNode(node.isBlack, node.item);
             if (item.compareTo(node.item) > 0) {
-                hadInseretedNode.left = node.left;
-                hadInseretedNode.right = insert(node.right, item);
+                node.right = insert(node.right, item);
             } else {
-                hadInseretedNode.left = insert(node.left, item);
-                hadInseretedNode.right = node.right;
+                node.left = insert(node.left, item);
             }
 
 
             // TODO: Rotate left operation
-            if (item.compareTo(hadInseretedNode.item) > 0 && !isRed(hadInseretedNode.left)) {
-                hadInseretedNode = rotateLeft(hadInseretedNode);
+            if (isRed(node.right) && !isRed(node.left)) {
+                node = rotateLeft(node);
             }
-
             // TODO: Rotate right operation
-            if (isRed(hadInseretedNode.left.left) && isRed(hadInseretedNode.left)) {
-                hadInseretedNode = rotateRight(hadInseretedNode);
-
+            if (isRed(node.left.left) && isRed(node.left)) {
+                node = rotateRight(node);
             }
-
             // TODO: Color flip
-            if (isRed(hadInseretedNode.left) && isRed(hadInseretedNode.right)) {
-               flipColors(hadInseretedNode);
+            if (isRed(node.left) && isRed(node.right)) {
+               flipColors(node);
             }
 
         }
-         return hadInseretedNode;//fix this return statement
+         return node;//fix this return statement
     }
 
 }
