@@ -116,7 +116,7 @@ public class RedBlackTree<T extends Comparable<T>> {
     public void insert(T item) {
         root = insert(root, item);
         root.isBlack = true;
-    }
+    }//这是什么意思? 一个封装?
 
     /**
      * Inserts the given node into this Red Black Tree. Comments have been provided to help break
@@ -128,8 +128,19 @@ public class RedBlackTree<T extends Comparable<T>> {
      */
     private RBTreeNode<T> insert(RBTreeNode<T> node, T item) {
         // TODO: Insert (return) new red leaf node.
+        if (node == null) {
+            return new RBTreeNode(false, item);
+        }
 
         // TODO: Handle normal binary search tree insertion.
+        else {
+            if (item.compareTo(node.item) > 0) {
+                return new RBTreeNode<>(node.isBlack, node.item, node.left, insert(node.right, item));
+            }
+            else {
+                return new RBTreeNode<>(node.isBlack, node.item, insert(node.left, item), node.right);
+            }
+        }
 
         // TODO: Rotate left operation
 
@@ -138,7 +149,7 @@ public class RedBlackTree<T extends Comparable<T>> {
         // TODO: Color flip
 
 
-        return null; //fix this return statement
+         //fix this return statement
     }
 
 }
