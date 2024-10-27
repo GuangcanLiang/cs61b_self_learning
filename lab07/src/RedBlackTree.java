@@ -95,7 +95,7 @@ public class RedBlackTree<T extends Comparable<T>> {
         // TODO: YOUR CODE HERE
         RBTreeNode<T> temp = new RBTreeNode<>(node.isBlack, node.item, node.left, node.right);//记录下待处理节点
         temp.right = temp.right.left;//待处理的右指向原右边的左
-        node = node.right;//改变，用待处理的you去覆盖
+        node = node.right;//改变，用待处理的右去覆盖
         node.left = temp;//覆盖后的右指向前面的处理过的记录节点
         //上面完成了旋转操作，还有颜色未改
         //node.isBlack = true;
@@ -124,7 +124,7 @@ public class RedBlackTree<T extends Comparable<T>> {
     public void insert(T item) {
         root = insert(root, item);
         root.isBlack = true;
-    }//这是什么意思? 一个封装?
+    }//这是什么意思? 一个封装?我们处理的指示节点，整棵树是用这个insert去构建的，这棵树没有constructor
 
     /**
      * Inserts the given node into this Red Black Tree. Comments have been provided to help break
@@ -169,7 +169,7 @@ public class RedBlackTree<T extends Comparable<T>> {
             // TODO: Color flip
             if (isRed(node.left) && isRed(node.right)) {
                flipColors(node);
-            }
+            }//后序遍历
 
         }
          return node;//fix this return statement
