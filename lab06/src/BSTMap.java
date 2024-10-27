@@ -39,7 +39,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B{
         //把传入的改变了，再return出去
         if (node == null) {
             node = new BSTMapNode<K, V>(key, value);
-        } else if (node.key == key) {
+        } else if (node.key.equals(key)) {
             node.value = value;
         } else {
             if (node.key.compareTo(key) > 0) {
@@ -54,10 +54,28 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B{
     boolean containsKey(BSTMapNode<K, V> node, K key) {
         if (node ==  null) {
             return false;
-        } else if (node.key == key) {
+        } else if (node.key.equals(key)) {
             return true;
         } else {
             return containsKey(node.left, key) || containsKey(node.right, key);
+        }
+    }
+
+    V get(BSTMapNode<K, V> node, K key) {
+        if (!containsKey(node, key)) {
+            return null;
+        }
+        if (node.key.equals(key)) {
+            return node.value;
+        }
+        else {
+            if (containsKey(node.left, key)) {
+                return (V)get(node.left, key);
+
+            }
+            else {
+                return (V)get(node.right, key);
+            }
         }
     }
 
@@ -87,7 +105,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B{
      */
     @Override
     public Object get(Object key) {
-        return null;
+        return get(root, (K)key);
     }
 
     /**
