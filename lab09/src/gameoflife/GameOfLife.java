@@ -227,6 +227,7 @@ public class GameOfLife {
 
     /**
      * 计算(x, y)周围的活细胞数
+     * 边界真烦
      * @param tiles
      * @param x
      * @param y
@@ -235,7 +236,13 @@ public class GameOfLife {
     private int countAround(TETile[][] tiles, int x , int y) {
         int counter = 0;
         for (int i = x - 1; i <= x + 1; i++) {
+            if ((i < 0)  || (i >= height)) {
+                continue;
+            }
             for (int j = y - 1; j <= y + 1; j++) {
+                if ((j < 0)  || (j >= height)) {
+                    continue;
+                }
                 if (tiles[i][j].equals(Tileset.CELL)) {
                     counter = counter + 1;
                 }
@@ -270,8 +277,10 @@ public class GameOfLife {
             for (int h = 0; h < height; h++) {
                 if (countAround(tiles, w, h) == 3 && tiles[w][h].equals(Tileset.NOTHING)) {
                     nextGen[w][h] = Tileset.CELL;
+                } else if ( (countAround(tiles, w, h) == 3 && tiles[w][h].equals(Tileset.CELL)) || (countAround(tiles, w, h) == 2)) {
+                    nextGen[w][h] = tiles[w][h];
                 }
-                    
+
 
             }
 
@@ -281,7 +290,7 @@ public class GameOfLife {
 
 
         // TODO: Returns the next evolution in TETile[][] nextGen.
-        return null;
+        return nextGen;
     }
 
     /**
