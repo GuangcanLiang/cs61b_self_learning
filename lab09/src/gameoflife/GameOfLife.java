@@ -93,6 +93,7 @@ public class GameOfLife {
      * Flips the matrix along the x-axis.
      * @param tiles
      * @return
+     * 沿着x反转
      */
     private TETile[][] flip(TETile[][] tiles) {
         int w = tiles.length;
@@ -113,6 +114,7 @@ public class GameOfLife {
      * Transposes the tiles.
      * @param tiles
      * @return
+     * 转置
      */
     private TETile[][] transpose(TETile[][] tiles) {
         int w = tiles[0].length;
@@ -224,6 +226,28 @@ public class GameOfLife {
     }
 
     /**
+     * 计算(x, y)周围的活细胞数
+     * @param tiles
+     * @param x
+     * @param y
+     * @return
+     */
+    private int countAround(TETile[][] tiles, int x , int y) {
+        int counter = 0;
+        for (int i = x - 1; i <= x + 1; i++) {
+            for (int j = y - 1; j <= y + 1; j++) {
+                if (tiles[i][j].equals(Tileset.CELL)) {
+                    counter = counter + 1;
+                }
+            }
+        }
+        if (tiles[x][y].equals(Tileset.CELL)) {
+            counter = counter - 1;
+        }
+        return counter;
+    }
+
+    /**
      * At each timestep, the transitions will occur based on the following rules:
      *  1.Any live cell with fewer than two live neighbors dies, as if by underpopulation.
      *  2.Any live cell with two or three neighbors lives on to the next generation.
@@ -240,6 +264,18 @@ public class GameOfLife {
         // TODO: Implement this method so that the described transitions occur.
         // TODO: The current state is represented by TETiles[][] tiles and the next
         // TODO: state/evolution should be returned in TETile[][] nextGen.
+        int height = tiles[0].length;
+        int width = tiles.length;
+        for (int w = 0; w < width; w++)
+            for (int h = 0; h < height; h++) {
+                if (countAround(tiles, w, h) == 3 && tiles[w][h].equals(Tileset.NOTHING)) {
+                    nextGen[w][h] = Tileset.CELL;
+                }
+                    
+
+            }
+
+
 
 
 

@@ -96,6 +96,14 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B{
         }
     }
 
+
+    BSTMapNode<K, V> findRightMost (BSTMapNode<K,V> node) {
+        while (node.right != null) {
+            node = node.right;
+        }
+        return node;//这样直接改了node，不行
+    }
+
     BSTMapNode<K, V> remove(BSTMapNode<K, V> node, K key) {
         if (node.left == null && node.right == null) {
             node = null;
