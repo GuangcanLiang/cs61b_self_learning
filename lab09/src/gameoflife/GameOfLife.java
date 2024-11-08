@@ -315,11 +315,36 @@ public class GameOfLife {
         // TODO: The width and height should be separated by a space, and end with "\n".
 
 
-
         // TODO: Save the current state of the board into save.txt. You should
         // TODO: use the provided FileUtils functions to help you. Make sure
         // TODO: the orientation is correct! Each line in the board should
         // TODO: end with a new line character.
+        //下面是错误示范，每次调用writeFile都会覆盖原有内容，最后啥都没有
+        /*for (int h = 0; h < height; h++) {
+            FileUtils.writeFile(SAVE_FILE, String.format("%d %d\n",width, height));
+            for (int w = 0; w < width; w++) {
+                if (currentState[w][h].equals(Tileset.NOTHING)) {
+                    FileUtils.writeFile(SAVE_FILE, "0");
+                }
+                else {
+                    FileUtils.writeFile(SAVE_FILE, "1");
+                }
+                FileUtils.writeFile(SAVE_FILE,"\n");
+            }
+        }*/
+        String content;
+        content = String.format("%d %d\n", width, height);
+        for (int h = height - 1; h >= 0; h--) {
+            for (int w = 0; w < width; w++) {
+                if (currentState[w][h].equals(Tileset.CELL)) {
+                    content =content + "1";
+                }else {
+                    content = content + "0";
+                }
+            }
+            content = content + "\n";
+        }
+        FileUtils.writeFile(SAVE_FILE, content);
 
 
 
@@ -350,7 +375,33 @@ public class GameOfLife {
 
 
         // TODO: Return the board you loaded. Replace/delete this line.
-        return null;
+
+        String content;
+        String[] contentList;
+        int width;
+        int height;
+        String information;
+
+        content = FileUtils.readFile(filename);
+        contentList = content.split("\n");
+        information = contentList[0];
+        width = Character.getNumericValue(information.charAt(0));
+        height = Character.getNumericValue(information.charAt(2));
+        TETile[][] loadTile = new TETile[width][height];
+        for (int h = 0; h < height; h++) {
+            int listIndex = height - h;
+            String currentContent = contentList[listIndex];
+            for (int w = 0; w < width; w++) {
+                char loadMemory = currentContent.charAt(w);
+                if (loadMemory == '1') {
+                    loadTile[w][h] = Tileset.CELL;
+                }else {
+                    loadTile[w][h] = Tileset.NOTHING;
+                }
+            }
+        }
+
+        return loadTile;
     }
 
     /**
