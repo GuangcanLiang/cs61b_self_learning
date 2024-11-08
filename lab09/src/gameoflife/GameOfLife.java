@@ -375,7 +375,8 @@ public class GameOfLife {
 
 
         // TODO: Return the board you loaded. Replace/delete this line.
-
+        //TETile[][] loadTile = new TETile[width][height]; 把这个初始化写在这里，直接创建一个50*50的矩阵，因为java按顺序执行代码，根本不知道width和height
+        //这里还有编号没处理完，虽然过了本地测试
         String content;
         String[] contentList;
         int width;
@@ -387,7 +388,7 @@ public class GameOfLife {
         information = contentList[0];
         width = Character.getNumericValue(information.charAt(0));
         height = Character.getNumericValue(information.charAt(2));
-        TETile[][] loadTile = new TETile[width][height];
+        TETile[][] loadTile = new TETile[width][height];//血与泪的教训，初始化这个之前，所用到的参数必须先全部明确定义
         for (int h = 0; h < height; h++) {
             int listIndex = height - h;
             String currentContent = contentList[listIndex];
