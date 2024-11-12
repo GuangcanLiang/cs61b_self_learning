@@ -92,6 +92,19 @@ public class Tetris {
 
         // TODO: Implement interactivity, so the user is able to input the keystrokes to move
         //  the tile and rotate the tile. You'll want to use some provided helper methods here.
+        if (StdDraw.hasNextKeyTyped()) {
+            if (StdDraw.nextKeyTyped() == 'q') {
+                movement.rotateLeft();
+            } else if (StdDraw.nextKeyTyped() == 'w') {
+                movement.rotateRight();
+            } else if (StdDraw.nextKeyTyped() == 'a') {
+                movement.tryMove(-1, 0);
+            } else if (StdDraw.nextKeyTyped() == 's') {
+                movement.tryMove(0, 1);
+            } else if (StdDraw.nextKeyTyped() == 'd') {
+                movement.tryMove(1, 0);
+            }
+        }
 
 
         Tetromino.draw(t, board, t.pos.x, t.pos.y);
@@ -102,9 +115,63 @@ public class Tetris {
      *
      * @param linesCleared
      */
+
     private void incrementScore(int linesCleared) {
         // TODO: Increment the score based on the number of lines cleared.
+        if (linesCleared == 1) {
+            score = score + 100;
+        } else if (linesCleared == 2) {
+            score = score + 300;
+        } else if (linesCleared == 3) {
+            score = score + 500;
+        } else if (linesCleared == 800) {
+            score =score + 800;
+        }
+    }
 
+
+    /**
+     * 扫描板上的第 j 行， 如果全满，返回true
+     * @param j
+     * @param tiles
+     * @return
+     */
+    private boolean scanIfRowFilled(int j, TETile[][] tiles) {
+        int width = tiles[0].length;
+        for (int i = 0; i < width; i++) {
+            if (tiles[i][j].equals(Tileset.NOTHING)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 扫描板上的第 i 行，只要有东西，就返回true
+     * @param j
+     * @param tiles
+     * @return
+     */
+    private boolean scanIfRowHaveSomething(int j, TETile[][] tiles) {
+        int width = tiles[0].length;
+        for (int i = 0; i < width; i++) {
+            if (!tiles[i][j].equals(Tileset.NOTHING)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     *  把一整行全设为Nothing
+     * @param j
+     * @param tiles
+     */
+    private void fillRowNothing(int j, TETile[][] tiles) {
+        int width = tiles[0].length;
+        for (int i = 0; i < width; i++) {
+            tiles[i][j] = Tileset.NOTHING;
+        }
     }
 
     /**
@@ -115,11 +182,26 @@ public class Tetris {
     public void clearLines(TETile[][] tiles) {
         // Keeps track of the current number lines cleared
         int linesCleared = 0;
-
         // TODO: Check how many lines have been completed and clear it the rows if completed.
-
+         int width = tiles[0].length;
+         int height = tiles.length;
+         TETile[][] newTile = new TETile[width][height];
+         int newTileIndex = 0;
+         for (int j = 0; scanIfRowHaveSomething(j, tiles) && j < height; j++) {
+             if (scanIfRowFilled(j, tiles)) {
+                 linesCleared = linesCleared + 1;
+             } else if (scanIfRowHaveSomething(j, tiles) && ! scanIfRowFilled(j, tiles)) {
+                 System.arraycopy(tiles[j], 0, newTile[newTileIndex], 0, width);
+                 newTileIndex = newTileIndex + 1;
+             } else if (!scanIfRowHaveSomething(j, tiles)) {
+                 for (int fillNothingIndex =  newTileIndex; fillNothingIndex < height; fillNothingIndex++) {
+                     System.arraycopy(tiles[j], 0, newTile[fillNothingIndex], 0, width);
+                 }
+             }
+         }
+         System.arraycopy(newTile, 0, tiles, 0, tiles.length);
         // TODO: Increment the score based on the number of lines cleared.
-
+        incrementScore(linesCleared);
         fillAux();
     }
 
@@ -129,9 +211,9 @@ public class Tetris {
      */
     public void runGame() {
         resetActionTimer();
-
         // TODO: Set up your game loop. The game should keep running until the game is over.
         // Use helper methods inside your game loop, according to the spec description.
+
 
 
     }
