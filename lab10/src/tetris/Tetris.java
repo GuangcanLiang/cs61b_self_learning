@@ -137,7 +137,7 @@ public class Tetris {
      * @return
      */
     private boolean scanIfRowFilled(int j, TETile[][] tiles) {
-        int width = tiles[0].length;
+        int width = tiles.length;
         for (int i = 0; i < width; i++) {
             if (tiles[i][j].equals(Tileset.NOTHING)) {
                 return false;
@@ -153,7 +153,7 @@ public class Tetris {
      * @return
      */
     private boolean scanIfRowHaveSomething(int j, TETile[][] tiles) {
-        int width = tiles[0].length;
+        int width = tiles.length;
         for (int i = 0; i < width; i++) {
             if (!tiles[i][j].equals(Tileset.NOTHING)) {
                 return true;
@@ -168,9 +168,21 @@ public class Tetris {
      * @param tiles
      */
     private void fillRowNothing(int j, TETile[][] tiles) {
-        int width = tiles[0].length;
+        int width = tiles.length;
         for (int i = 0; i < width; i++) {
             tiles[i][j] = Tileset.NOTHING;
+        }
+    }
+
+    /**
+     * 复制第 j 行
+     * @param srcTile
+     * @param target
+     * @param j
+     */
+    private void copyRow(TETile[][] srcTile, TETile[][] target, int j) {
+        for (int i = 0; i < srcTile.length; i++) {
+            target[i][j] = srcTile[i][j];
         }
     }
 
@@ -183,19 +195,22 @@ public class Tetris {
         // Keeps track of the current number lines cleared
         int linesCleared = 0;
         // TODO: Check how many lines have been completed and clear it the rows if completed.
-         int width = tiles[0].length;
-         int height = tiles.length;
+         int width = tiles.length;
+         int height = tiles[0].length;
          TETile[][] newTile = new TETile[width][height];
+         for (int j = 0; j < height; j++ ) {
+             fillRowNothing(j, newTile);
+         }
          int newTileIndex = 0;
-         for (int j = 0; scanIfRowHaveSomething(j, tiles) && j < height; j++) {
+         for (int j = 0; j < height && scanIfRowHaveSomething(j, tiles); j++) {
              if (scanIfRowFilled(j, tiles)) {
                  linesCleared = linesCleared + 1;
              } else if (scanIfRowHaveSomething(j, tiles) && ! scanIfRowFilled(j, tiles)) {
-                 System.arraycopy(tiles[j], 0, newTile[newTileIndex], 0, width);
+                 copyRow(tiles, newTile, j);
                  newTileIndex = newTileIndex + 1;
              } else if (!scanIfRowHaveSomething(j, tiles)) {
                  for (int fillNothingIndex =  newTileIndex; fillNothingIndex < height; fillNothingIndex++) {
-                     System.arraycopy(tiles[j], 0, newTile[fillNothingIndex], 0, width);
+                     copyRow(tiles, newTile, j);
                  }
              }
          }
@@ -213,6 +228,14 @@ public class Tetris {
         resetActionTimer();
         // TODO: Set up your game loop. The game should keep running until the game is over.
         // Use helper methods inside your game loop, according to the spec description.
+        while (!isGameOver()) {
+            spawnPiece();
+            while (movement.canMove(0, -1)) {
+                updateBoard();
+            }
+            clearLines(board);
+            renderBoard();
+        }
 
 
 
