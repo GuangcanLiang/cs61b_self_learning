@@ -36,7 +36,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B{
     }
 
 
-    BSTMapNode put(BSTMapNode<K, V> node, K key, V value) {
+    private BSTMapNode put(BSTMapNode<K, V> node, K key, V value) {
         //把传入的改变了，再return出去
         if (!containsKey(node, key)) {
             if (node == null) {
@@ -51,12 +51,12 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B{
                 node.size = node.size + 1;
             }
         }
-        else {
+        else {//本就有，更改值
             if (node.key.equals(key)) {
                 node.value = value;
             }
             else {
-                if (containsKey(node.left, key)) {
+                if (node.key.compareTo(key) > 0) {
                     node.left = put(node.left, key, value);
                 }
                 else {
@@ -68,7 +68,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B{
         return node;
     }
     
-    boolean containsKey(BSTMapNode<K, V> node, K key) {
+    private boolean containsKey(BSTMapNode<K, V> node, K key) {
         if (node ==  null) {
             return false;
         } else if (node.key.equals(key)) {
@@ -78,7 +78,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B{
         }
     }
 
-    V get(BSTMapNode<K, V> node, K key) {
+    private V get(BSTMapNode<K, V> node, K key) {
         if (!containsKey(node, key)) {
             return null;
         }
@@ -86,7 +86,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B{
             return node.value;
         }
         else {
-            if (containsKey(node.left, key)) {
+            if (node.key.compareTo(key) > 0) {
                 return (V)get(node.left, key);
 
             }
@@ -96,21 +96,83 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B{
         }
     }
 
-
-    BSTMapNode<K, V> findRightMost (BSTMapNode<K,V> node) {
-        while (node.right != null) {
-            node = node.right;
+    private BSTMapNode<K, V> findNode(BSTMapNode<K, V> node, K key) {
+        if (node.key.equals(key)) {
+            return  node;
+        } else if (containsKey(node.left, key)) {
+            return findNode(node.left, key);
+        } else  {
+            return findNode(node.right, key);
         }
-        return node;//这样直接改了node，不行
     }
 
-    BSTMapNode<K, V> remove(BSTMapNode<K, V> node, K key) {
-        if (node.left == null && node.right == null) {
-            node = null;
+    /**
+     * 找到一棵树最大的节点, !!!并进行修改!!!
+     * 注意！！！一个函数是不能够这么写的，不能既return, 还修改！！！
+     * @param node
+     * @return
+     */
+    private BSTMapNode<K, V> findMax(BSTMapNode<K,V> node) {
+        if (node.right.right == null) {
+            BSTMapNode<K,V> Max = new BSTMapNode<K, V>((K) node.right.key, (V) node.right.value, node.right.left, node.right.right);
+            node.right = node.right.left;
+            return Max;
+        } else {
+            return findMax(node.right);
         }
+    }
 
+    private BSTMapNode<K, V> findMin(BSTMapNode<K,V> node) {
+        if (node.left == null) {
+            return node;
+        } else {
+            return findMin(node.left);
+        }
+    }
+//这逼代码实在是太丑了
+    private BSTMapNode<K, V> remove(BSTMapNode<K, V> node, K key) {
+        if (node.key.equals(key)) {//node是要删的节点
+            if (node.left == null && node.right == null) {//要删的两边都没有值
+                node.size = node.size - 1;
+                return null;
+            } else if (node.left == null && node.right != null) {//要删的只在右边有值
+                node.size = node.size - 1;
+                return node.right;
+            } else if (node.right == null && node.left != null) {//要删的只在左边有值
+                node.size = node.size - 1;
+                return node.left ;
+            } else {//要删的两边都有值，在中间
 
-        return node;
+                if (node.left.right == null) {
+                    node.key = (K)node.left.key;
+                    node.value = (V)node.left.value;
+                    node.left = node.left.left;
+                    node.size = node.size - 1;
+                    return node;
+                } else{ BSTMapNode<K,V> MAX = findMax(node.left);
+                node.key = MAX.key;
+                node.value = MAX.value;
+                node.size = node.size - 1;
+                return node;}
+
+                /*
+                BSTMapNode<K, V> minNode = findMin(node.right);
+                node.key = minNode.key;
+                node.value = minNode.value;
+                node.right = remove(node.right, key);
+                node.size = node.size - 1;
+                return node;
+                */}
+
+        } else if (node.key.compareTo(key) > 0) {
+            node.left = remove(node.left, key);
+            node.size = node.size - 1;
+            return node;
+        } else {
+            node.right = remove(node.right, key);
+            node.size = node.size - 1;
+            return node;
+        }
     }
 
 
@@ -190,7 +252,12 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B{
      */
     @Override
     public Object remove(Object key) {
-        return null;
+       if(containsKey(key)) {V value = (V)get(key);
+        root = remove(root,(K) key);
+        return value;}
+       else {
+           return null;
+       }
     }
 
     /**
