@@ -1,5 +1,7 @@
 package ngrams;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -31,6 +33,11 @@ public class TimeSeries extends TreeMap<Integer, Double> {
     public TimeSeries(TimeSeries ts, int startYear, int endYear) {
         super();
         // TODO: Fill in this constructor.
+        Iterator<Integer> yearsIterator = ts.years().iterator();
+        while (yearsIterator.hasNext()) {
+            Integer year = yearsIterator.next();
+            this.put(year, ts.get(year));
+        }
     }
 
     /**
@@ -38,7 +45,9 @@ public class TimeSeries extends TreeMap<Integer, Double> {
      */
     public List<Integer> years() {
         // TODO: Fill in this method.
-        return null;
+        List<Integer> yearsList;
+        yearsList = new ArrayList<>(keySet());
+        return yearsList;
     }
 
     /**
@@ -47,7 +56,14 @@ public class TimeSeries extends TreeMap<Integer, Double> {
      */
     public List<Double> data() {
         // TODO: Fill in this method.
-        return null;
+        List<Double> dataList = new ArrayList<>();
+        List<Integer> yearsList = years();
+        Iterator<Integer> yearsIterator = yearsList.iterator();
+        while (yearsIterator.hasNext()) {
+            Double data = get(yearsIterator.next());
+            dataList.add(data);
+        }
+        return dataList;
     }
 
     /**
@@ -61,7 +77,22 @@ public class TimeSeries extends TreeMap<Integer, Double> {
      */
     public TimeSeries plus(TimeSeries ts) {
         // TODO: Fill in this method.
-        return null;
+        List<Integer> yearsList = ts.years();
+        List<Double> dataList = ts.data();
+        Iterator<Integer> yearsIterator = yearsList.iterator();
+        Iterator<Double> dataIterator = dataList.iterator();
+        while (yearsIterator.hasNext() || dataIterator.hasNext()) {
+            Integer yearsKey = yearsIterator.next();
+            double dataValue = dataIterator.next();
+            if (! this.containsKey(yearsKey)) {
+                this.put(yearsKey, dataValue);
+            } else {
+                double originValue = this.get(yearsKey);
+                dataValue = dataValue + originValue;
+                this.put(yearsKey, dataValue);
+            }
+        }
+        return this;
     }
 
     /**
@@ -75,7 +106,22 @@ public class TimeSeries extends TreeMap<Integer, Double> {
      */
     public TimeSeries dividedBy(TimeSeries ts) {
         // TODO: Fill in this method.
-        return null;
+        TimeSeries quotientSeries = new TimeSeries();
+        List<Integer> yearsList = years();
+        List<Double> dataList = data();
+        Iterator<Integer> yearsIterator = yearsList.iterator();
+        Iterator<Double> dataIterator = dataList.iterator();
+        while (yearsIterator.hasNext() || dataIterator.hasNext()) {
+            Integer beDividedKey = yearsIterator.next();
+            Double beDividedValue = dataIterator.next();
+            if (ts.containsKey(beDividedKey)) {
+                beDividedValue = beDividedValue / ts.get(beDividedKey);
+                quotientSeries.put(beDividedKey, beDividedValue);
+            } else {
+                throw new  IllegalArgumentException("TS  miss a year that exists in this TimeSeries");
+            }
+        }
+        return quotientSeries;
     }
 
     // TODO: Add any private helper methods.
