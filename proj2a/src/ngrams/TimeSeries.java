@@ -115,7 +115,11 @@ public class TimeSeries extends TreeMap<Integer, Double> {
             Integer beDividedKey = yearsIterator.next();
             Double beDividedValue = dataIterator.next();
             if (ts.containsKey(beDividedKey)) {
-                beDividedValue = beDividedValue / ts.get(beDividedKey);
+                double divisor = ts.get(beDividedKey);
+                if (divisor == 0) {
+                    throw new ArithmeticException("divisor is 0");
+                }
+                beDividedValue = beDividedValue / divisor;
                 quotientSeries.put(beDividedKey, beDividedValue);
             } else {
                 throw new  IllegalArgumentException("TS  miss a year that exists in this TimeSeries");
